@@ -19,17 +19,41 @@ use yii\db\ActiveRecord;
  */
 class AuditTrail extends ActiveRecord
 {
+    private $_message_category = 'audittrail';
+    
 	/**
 	 * @return string the associated database table name
 	 */
 	public static function tableName()
 	{
-		if(isset(Yii::$app->params['audittrail.table']) && isset(Yii::$app->params['audittrail.table'])){
+		if(isset(Yii::$app->params['audittrail.table'])){
 			return Yii::$app->params['audittrail.table'];
 		}else{
 			return '{{%audit_trail}}';
 		}
 	}
+
+    /**
+     * @return \yii\db\Connection the database connection used by this AR class.
+     */
+    public static function getDb() 
+    {
+        if (isset(Yii::$app->params['audittrail.db'])) {
+            return Yii::$app->get(Yii::$app->params['audittrail.db']);
+        } else  {
+            return parent::getDb();
+        }
+        // return Yii::$app->get('dbUser');
+    }
+        
+    public function init()
+    {
+        parent::init();
+        
+        \Yii::$app->i18n->translations[$this->_message_category] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+        ];
+    }
 	
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -37,15 +61,15 @@ class AuditTrail extends ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => 'ID',
-			'old_value' => 'Old Value',
-			'new_value' => 'New Value',
-			'action' => 'Action',
-			'model' => 'Type',
-			'field' => 'Field',
-			'stamp' => 'Stamp',
-			'user_id' => 'User',
-			'model_id' => 'ID',
+			'id' => Yii::t('audittrail','ID'),
+			'old_value' => Yii::t('audittrail','Old Value'),
+			'new_value' => Yii::t('audittrail','New Value'),
+			'action' => Yii::t('audittrail','Action'),
+			'model' => Yii::t('audittrail','Type'),
+			'field' => Yii::t('audittrail','Field'),
+			'stamp' => Yii::t('audittrail','Stamp'),
+			'user_id' => Yii::t('audittrail','User'),
+			'model_id' => Yii::t('audittrail','ID'),
 		];
 	}	
 

@@ -2,6 +2,42 @@
 
 Yii2 edition of the [audittrail extension](https://github.com/Sammaye/audittrail).
 
+## How to use
+
+To use this extension you can simply add it to the model's behaviours:
+
+	use yii\db\ActiveRecord;
+	
+	class Model extends ActiveRecord
+	{
+		public function behaviors()
+		{
+			return [
+				'sammaye\audittrail\LoggableBehavior'
+			];
+		}
+	}
+
+You can convert the entered behaviour into a key - value structure to define options for the extension for that model:
+
+	class Model extends ActiveRecord
+	{
+		public function behaviors()
+		{
+			return [
+				'LoggableBehavior' => [
+					'class' => 'sammaye\audittrail\LoggableBehavior',
+					'ignored' => ['some_field'], // This ignores fields from a selection of all fields, not needed with allowed
+					'allowed' => ['another_field'] // optional, not needed if you use ignore
+				]
+			];
+		}
+	}
+
+And that is basically how to setup this extension.
+
+## Changes
+
 There are a couple of changes.
 
 One of them is how to define global parameters for this extension.
@@ -18,7 +54,7 @@ The below example is the one from the previous documentation rewritten for Yii2:
 
     <?php
     use yii\data\ActiveDataProvider;
-    use sammaye\auditrail\AuditTrail;
+    use sammaye\audittrail\AuditTrail;
     use common\models\Title;
     use common\models\Product;
 
@@ -98,11 +134,15 @@ Currently in this extension I store the fully qualified name of the class to:
 - Take advantage of namespacing to create uniqueness
 - To make it easier to query using the `className()` function in Objects.
 
-# Todo:
+## Migration
 
-- Test the migration
+There are two ways of doing this:
 
-# Resources:
+- Copy the migration file (within the `migrations` folder) to your `console/migrations` folder
+- Use `--migrationPath` option of the `migrate` command to 
+[point to the migrations folder in this repo](http://www.yiiframework.com/doc-2.0/guide-db-migrations.html#migrating-multiple-databases)
+
+## Resources
 
 - [Packagist](https://packagist.org/packages/sammaye/yii2-audittrail)
 - [Issue Tracker](https://github.com/Sammaye/yii2-auditrail/issues)
